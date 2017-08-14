@@ -38,7 +38,7 @@ public class VenueObject {
     }
 
     public String getPreviewImage() {
-        return this.venueImages.get(0);
+        return (!this.venueImages.isEmpty()) ? this.venueImages.get(0) : "";
     }
 
     public String getId() {

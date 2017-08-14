@@ -60,13 +60,24 @@ public class Venue extends Fragment {
 
         Backend.getInstance().getVenues(new GetCallback() {
             @Override
-            public void onComplete(ArrayList<VenueObject> venues, Exception e) {
+            public void onComplete(final ArrayList<VenueObject> venues, Exception e) {
                 if (e == null) {
-                    adapter.addVenues(venues);
-                    dialog.dismiss();
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.addVenues(venues);
+                            dialog.dismiss();
+                        }
+                    });
                 } else {
                     e.printStackTrace();
-                    dialog.dismiss();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            dialog.dismiss();
+                        }
+                    });
                 }
             }
         });

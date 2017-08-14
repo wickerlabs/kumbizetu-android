@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import or.buni.ventz.R;
@@ -64,12 +65,19 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         VenueObject venue = venues.get(position);
+        DecimalFormat format = new DecimalFormat("#,###");
+
+        Float price = Float.parseFloat(venue.getPriceFrom());
 
         holder.name.setText(venue.getName());
         holder.price.setText(venue.getPriceFrom());
         holder.location.setText(venue.getLocationDesc());
+        holder.price.setText(format.format(price));
 
-        Glide.with(context).load(venue.getPreviewImage()).into(holder.venueImage);
+        if (!venue.getPreviewImage().equals("")) {
+
+            Glide.with(context).load(venue.getPreviewImage()).into(holder.venueImage);
+        }
     }
 
     @Override
