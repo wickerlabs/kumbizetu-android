@@ -67,7 +67,6 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
 
         holder.name.setText(venue.getName());
         holder.price.setText(venue.getPriceFrom());
-        holder.accommodation.setText(venue.getAccommodation());
         holder.location.setText(venue.getLocationDesc());
 
         Glide.with(context).load(venue.getPreviewImage()).into(holder.venueImage);
@@ -80,14 +79,13 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, price, accommodation, location;
+        TextView name, price, location;
         ImageView venueImage;
 
         private ViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.venueName);
             price = itemView.findViewById(R.id.priceRange);
-            accommodation = itemView.findViewById(R.id.peopleAmount);
             location = itemView.findViewById(R.id.location);
             venueImage = itemView.findViewById(R.id.venueImage);
         }
