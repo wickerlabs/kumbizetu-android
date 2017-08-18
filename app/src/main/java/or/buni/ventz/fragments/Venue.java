@@ -2,9 +2,9 @@ package or.buni.ventz.fragments;
 
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,8 +14,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import or.buni.ventz.R;
+import or.buni.ventz.VenueDetailsActivity;
 import or.buni.ventz.adapters.VenueListAdapter;
 import or.buni.ventz.interfaces.GetCallback;
+import or.buni.ventz.interfaces.ItemClickListener;
 import or.buni.ventz.networking.Backend;
 import or.buni.ventz.objects.VenueObject;
 
@@ -48,9 +50,19 @@ public class Venue extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.venueList);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        adapter = new VenueListAdapter(getContext());
+        adapter = new VenueListAdapter(getContext(), new ItemClickListener() {
+            @Override
+            public void onClick(VenueObject venue) {
+                Intent intent = new Intent(getContext(), VenueDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                intent.putExtra("json", venue.getVenueJSON());
+
+                startActivity(intent);
+                //Toast.makeText(getContext(), venue.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
         recyclerView.setAdapter(adapter);
 
         final ProgressDialog dialog = new ProgressDialog(getContext());

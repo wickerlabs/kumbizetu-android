@@ -9,12 +9,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import or.buni.ventz.adapters.SectionsPageAdapter;
+import or.buni.ventz.fragments.SearchFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    FloatingActionButton fab;
     private SectionsPageAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
     private int tabIcons[] = {
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
@@ -43,11 +45,14 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(tabIcons[1]);
         tabLayout.getTabAt(2).setIcon(tabIcons[2]);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Cooming soon", Toast.LENGTH_SHORT).show();
+                SearchFragment searchFragment = SearchFragment.newInstance();
+                searchFragment.setParentFab(fab);
+                searchFragment.show(getSupportFragmentManager(), searchFragment.getTag());
+                //Toast.makeText(MainActivity.this, "Cooming soon", Toast.LENGTH_SHORT).show();
             }
         });
 

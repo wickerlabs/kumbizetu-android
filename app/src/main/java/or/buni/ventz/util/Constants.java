@@ -6,9 +6,9 @@ package or.buni.ventz.util;
 
 public class Constants {
 
-    private static String BASE_URL = "http://10.42.0.1/kumbi/";
+    private static String BASE_URL = "https://sandbox.wickerlabs.com/kumbi/";
 
-    public static String URL = BASE_URL.concat("backend/index.php");
+    public static String URL = BASE_URL.concat("index.php");
 
     public static String IMAGE_URL = BASE_URL.concat("images/");
 

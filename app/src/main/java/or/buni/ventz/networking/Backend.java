@@ -65,25 +65,7 @@ public class Backend {
                     JSONArray array = new JSONArray(venJSON);
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject venueObject = array.getJSONObject(i);
-                        String venID = venueObject.getString("venueId");
-                        String venName = venueObject.getString("venueName");
-                        String venLocDesc = venueObject.getString("locationDesc");
-                        String venPrice = venueObject.getString("price");
-                        String venAdvPrice = venueObject.getString("advancePrice");
-                        String venSize = venueObject.getString("accumulation");
-
-                        VenueObject venue = new VenueObject(venID, venName, venAdvPrice, venPrice, venSize, venLocDesc);
-
-                        JSONArray imagesArray = venueObject.getJSONArray("images");
-                        Log.i("[+] Venue->".concat(venID).concat("->found"), String.valueOf(imagesArray.length()));
-
-                        for (int j = 0; j < imagesArray.length(); j++) {
-                            JSONObject image = imagesArray.getJSONObject(j);
-                            String imageURL = image.getString("image");
-
-                            Log.i("[+] Venue->".concat(venID).concat("->image"), imageURL);
-                            venue.addImage(Constants.IMAGE_URL.concat(imageURL));
-                        }
+                        VenueObject venue = VenueObject.parse(venueObject.toString());
 
                         venues.add(venue);
                     }

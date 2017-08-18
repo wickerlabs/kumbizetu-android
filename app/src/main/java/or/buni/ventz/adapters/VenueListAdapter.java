@@ -10,11 +10,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import or.buni.ventz.R;
+import or.buni.ventz.interfaces.ItemClickListener;
 import or.buni.ventz.objects.VenueObject;
+import or.buni.ventz.util.Formatter;
 
 /**
  * Created by yusuphwickama on 8/11/17.
@@ -24,25 +25,12 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
 
     private ArrayList<VenueObject> venues;
     private Context context;
+    private ItemClickListener clickListener;
 
-    public VenueListAdapter(Context context) {
+    public VenueListAdapter(Context context, ItemClickListener listener) {
         this.venues = new ArrayList<>();
         this.context = context;
-
-        /*VenueObject venue = new VenueObject("xdewP","Impala Halls","1 - 3 Mil","0","500","Kijitonyama");
-        venue.setVenueImage(R.drawable.ven_1);
-
-        VenueObject venue2 = new VenueObject("xdewo","Primerose","2 - 3.5 Mil","0","1500","Mbezi");
-        venue2.setVenueImage(R.drawable.ven_2);
-
-        VenueObject venue3 = new VenueObject("xdewo","Buni Halls","500k - 3.5 Mil","0","100","Sayansi");
-        venue3.setVenueImage(R.drawable.ven_1);
-
-        this.venues.add(venue);
-        this.venues.add(venue2);
-        this.venues.add(venue3);*/
-
-        this.notifyDataSetChanged();
+        this.clickListener = listener;
     }
 
     public VenueListAdapter(ArrayList<VenueObject> venues) {
@@ -65,14 +53,11 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         VenueObject venue = venues.get(position);
-        DecimalFormat format = new DecimalFormat("#,###");
-
-        Float price = Float.parseFloat(venue.getPriceFrom());
 
         holder.name.setText(venue.getName());
         holder.price.setText(venue.getPriceFrom());
         holder.location.setText(venue.getLocationDesc());
-        holder.price.setText(format.format(price));
+        holder.price.setText(Formatter.shortenMoney(Float.parseFloat(venue.getPriceFrom())));
 
         if (!venue.getPreviewImage().equals("")) {
 
@@ -96,6 +81,13 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
             price = itemView.findViewById(R.id.priceRange);
             location = itemView.findViewById(R.id.location);
             venueImage = itemView.findViewById(R.id.venueImage);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    clickListener.onClick(venues.get(getAdapterPosition()));
+                }
+            });
         }
     }
 

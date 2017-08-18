@@ -1,8 +1,17 @@
 <resources>
-    <string name="app_name">Kumby</string>
+    <string name="app_name">Bukit</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_venue_details">Venue Details</string>
+    <string name="large_text">
+        Customer care department also known as customer service department
+        is a unit within an organization which is responsible for taking care of
+        the customer’s needs  by providing professional help, high quality service
+        and assistance before, during and after the customer’s requirements are met.
+        \n\nIt also provides the customers with information regarding the products and
+        services and help resolve their complaints.
+    </string>
 </resources>
