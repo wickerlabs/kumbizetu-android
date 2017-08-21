@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/debug/drawable-ar/cell_selected_cell_end.xml",
+        "source": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/src/main/res/drawable-ar/cell_selected_cell_end.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/debug/drawable-ar/cell_selected_cell_start.xml",
+        "source": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/src/main/res/drawable-ar/cell_selected_cell_start.xml"
+    }
+]

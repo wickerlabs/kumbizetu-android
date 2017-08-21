@@ -12,13 +12,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.roomorama.caldroid.CaldroidFragment;
 
 import org.json.JSONException;
 
+import java.util.Date;
+
 import or.buni.ventz.adapters.VenueSectionAdapter;
+import or.buni.ventz.fragments.VenueOverview;
 import or.buni.ventz.objects.VenueObject;
 import or.buni.ventz.util.Formatter;
 
@@ -26,7 +29,7 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
     private VenueObject venue;
     private ImageView imageView;
-    private TextView name, place, price;
+    private TextView name, place, price, description;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private VenueSectionAdapter adapter;
@@ -39,15 +42,6 @@ public class VenueDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
-
-        adapter = new VenueSectionAdapter(getSupportFragmentManager());
-        tabLayout = (TabLayout) findViewById(R.id.tablayout);
-
-        mViewPager = (ViewPager) findViewById(R.id.containerDetails);
-        mViewPager.setOffscreenPageLimit(3);
-        mViewPager.setAdapter(adapter);
-
-        tabLayout.setupWithViewPager(mViewPager);
 
         Intent intent = getIntent();
         String json = intent.getStringExtra("json");
@@ -65,10 +59,22 @@ public class VenueDetailsActivity extends AppCompatActivity {
         name.setText(venue.getName());
         price.setText(Formatter.shortenMoney(Float.parseFloat(venue.getPriceFrom())));
         place.setText(venue.getLocationDesc());
+        String size = venue.getAccommodation();
+        VenueOverview.getInstance().setSize(size);
+        VenueOverview.getInstance().setName(venue.getName());
 
         imageView = (ImageView) findViewById(R.id.imageView);
 
         Glide.with(this).load(venue.getPreviewImage()).into(imageView);
+
+        adapter = new VenueSectionAdapter(getSupportFragmentManager());
+        tabLayout = (TabLayout) findViewById(R.id.tablayout);
+
+        mViewPager = (ViewPager) findViewById(R.id.containerDetails);
+        mViewPager.setOffscreenPageLimit(3);
+        mViewPager.setAdapter(adapter);
+
+        tabLayout.setupWithViewPager(mViewPager);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
@@ -77,7 +83,11 @@ public class VenueDetailsActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(VenueDetailsActivity.this, "Cooming soon...", Toast.LENGTH_SHORT).show();
+                CaldroidFragment fragment = CaldroidFragment.newInstance("Pick date of event", new Date().getMonth(), new Date().getDay());
+                fragment.setMinDate(new Date());
+
+                fragment.show(getSupportFragmentManager(), "CALDROID_TAG");
+                //Toast.makeText(VenueDetailsActivity.this, "Cooming soon...", Toast.LENGTH_SHORT).show();
             }
         });
 

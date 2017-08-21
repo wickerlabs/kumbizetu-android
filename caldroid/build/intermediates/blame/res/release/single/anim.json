@@ -1,0 +1,42 @@
+[
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_popup_enter.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_slide_out_bottom.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_slide_in_bottom.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_popup_exit.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_fade_out.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_slide_in_top.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_slide_out_top.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/home/yusuphwickama/StudioProjects/Ventz/caldroid/build/intermediates/res/merged/release/anim/abc_fade_in.xml",
+        "source": "/home/yusuphwickama/.android/build-cache/31d95cf1d09318009fa4709a79c322a7145d6497/output/res/anim/abc_fade_in.xml"
+    }
+]

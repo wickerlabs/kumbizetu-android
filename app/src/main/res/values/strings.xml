@@ -14,4 +14,5 @@
         \n\nIt also provides the customers with information regarding the products and
         services and help resolve their complaints.
     </string>
+    <string name="title_activity_calendar">CalendarActivity</string>
 </resources>
