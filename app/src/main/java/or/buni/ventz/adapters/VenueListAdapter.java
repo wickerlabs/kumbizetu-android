@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 
@@ -60,8 +62,16 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
         holder.price.setText(Formatter.shortenMoney(Float.parseFloat(venue.getPriceFrom())));
 
         if (!venue.getPreviewImage().equals("")) {
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
+            options.skipMemoryCache(true);
+            options.centerCrop();
+            options.sizeMultiplier(0.7f);
 
-            Glide.with(context).load(venue.getPreviewImage()).into(holder.venueImage);
+            Glide.with(context)
+                    .load(venue.getPreviewImage())
+                    .apply(options)
+                    .into(holder.venueImage);
         }
     }
 

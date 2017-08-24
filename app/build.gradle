@@ -39,6 +39,8 @@ dependencies {
     compile 'io.apptik.widget:multislider-holo:1.3'
     compile 'com.robertlevonyan.view:MaterialChipView:1.0.1'
     compile 'com.github.thunder413:DateTimeUtils:1.0'
+
     testCompile 'junit:junit:4.12'
-    compile project(':caldroid')
+    compile project(':rangedatepicker')
+    compile project(':library')
 }

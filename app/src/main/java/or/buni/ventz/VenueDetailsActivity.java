@@ -5,19 +5,24 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.roomorama.caldroid.CaldroidFragment;
+import com.savvi.rangedatepicker.CalendarPickerView;
 
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import or.buni.ventz.adapters.VenueSectionAdapter;
@@ -27,13 +32,14 @@ import or.buni.ventz.util.Formatter;
 
 public class VenueDetailsActivity extends AppCompatActivity {
 
+    AlertDialog dialog;
     private VenueObject venue;
     private ImageView imageView;
     private TextView name, place, price, description;
     private ViewPager mViewPager;
     private TabLayout tabLayout;
     private VenueSectionAdapter adapter;
-
+    private ArrayList<Date> venueDates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +68,14 @@ public class VenueDetailsActivity extends AppCompatActivity {
         String size = venue.getAccommodation();
         VenueOverview.getInstance().setSize(size);
         VenueOverview.getInstance().setName(venue.getName());
+        VenueOverview.getInstance().setDesc(venue.getDescription());
+
+        venueDates = venue.getBookings();
 
         imageView = (ImageView) findViewById(R.id.imageView);
 
         Glide.with(this).load(venue.getPreviewImage()).into(imageView);
+
 
         adapter = new VenueSectionAdapter(getSupportFragmentManager());
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
@@ -76,17 +86,70 @@ public class VenueDetailsActivity extends AppCompatActivity {
 
         tabLayout.setupWithViewPager(mViewPager);
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mViewPager.setCurrentItem(1, true);
+            }
+        });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("");
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CaldroidFragment fragment = CaldroidFragment.newInstance("Pick date of event", new Date().getMonth(), new Date().getDay());
-                fragment.setMinDate(new Date());
 
-                fragment.show(getSupportFragmentManager(), "CALDROID_TAG");
+
+                View dateView = View.inflate(VenueDetailsActivity.this, R.layout.date_picker, null);
+
+                final Calendar nextYear = Calendar.getInstance();
+                nextYear.add(Calendar.MONTH, 6);
+
+                final Calendar lastYear = Calendar.getInstance();
+
+                ImageButton submit = dateView.findViewById(R.id.submitDate);
+                ImageButton cancel = dateView.findViewById(R.id.closeDate);
+                final CalendarPickerView calendar = dateView.findViewById(R.id.calendar_view);
+
+
+                cancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+                //calendar.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT,600));
+
+                calendar.init(lastYear.getTime(), nextYear.getTime())//
+                        .inMode(CalendarPickerView.SelectionMode.SINGLE);
+
+
+                submit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (calendar.getSelectedDate() != null) {
+                            String dateSelected = String.format("Time choosen is %s", calendar.getSelectedDate().toString());
+                            Toast.makeText(VenueDetailsActivity.this, dateSelected, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(VenueDetailsActivity.this, "Select a date to continue", Toast.LENGTH_SHORT).show();
+                        }
+                        //dialog.dismiss();
+                    }
+                });
+
+
+                calendar.highlightDates(venueDates);
+
+                dialog = new AlertDialog.Builder(VenueDetailsActivity.this)
+                        .setCancelable(false)
+                        .setView(dateView)
+                        .show();
+
+
                 //Toast.makeText(VenueDetailsActivity.this, "Cooming soon...", Toast.LENGTH_SHORT).show();
             }
         });

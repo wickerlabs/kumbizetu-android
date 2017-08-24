@@ -16,7 +16,7 @@ import or.buni.ventz.R;
 public class VenueOverview extends Fragment {
 
     private static VenueOverview instance;
-    String name, size;
+    String name, size, desc;
     private TextView description;
 
     public VenueOverview() {
@@ -39,6 +39,10 @@ public class VenueOverview extends Fragment {
         this.name = name;
     }
 
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,11 +50,12 @@ public class VenueOverview extends Fragment {
         View view = inflater.inflate(R.layout.fragment_venue_overview, container, false);
 
         description = view.findViewById(R.id.descriptionTxt);
-        description.setText(name + " is a bright, " +
+        description.setText(desc);
+        /*description.setText(name + " is a bright, " +
                 "flexible space that can accommodate up to " + size + " people. " +
                 "While it is commonly used for small conferences and seminars, " +
                 "its proximity to the kitchen also makes " +
-                "it perfect for small receptions and dinners.");
+                "it perfect for small receptions and dinners.");*/
 
         return view;
 

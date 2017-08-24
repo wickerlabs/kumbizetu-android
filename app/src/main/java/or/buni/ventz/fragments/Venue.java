@@ -4,6 +4,7 @@ package or.buni.ventz.fragments;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import or.buni.ventz.R;
 import or.buni.ventz.VenueDetailsActivity;
 import or.buni.ventz.adapters.VenueListAdapter;
-import or.buni.ventz.interfaces.GetCallback;
+import or.buni.ventz.interfaces.GetVenueCallback;
 import or.buni.ventz.interfaces.ItemClickListener;
 import or.buni.ventz.networking.Backend;
 import or.buni.ventz.objects.VenueObject;
@@ -28,6 +29,7 @@ public class Venue extends Fragment {
 
     private static Venue instance;
     private VenueListAdapter adapter;
+    private ProgressDialog dialog;
 
     public Venue() {
         // Required empty public constructor
@@ -65,12 +67,19 @@ public class Venue extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        final ProgressDialog dialog = new ProgressDialog(getContext());
+        loadVenues(view);
+
+        return view;
+
+    }
+
+    private void loadVenues(final View mView) {
+        dialog = new ProgressDialog(getContext());
         dialog.setMessage("Loading, please wait...");
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
 
-        Backend.getInstance().getVenues(new GetCallback() {
+        Backend.getInstance().getVenues(new GetVenueCallback() {
             @Override
             public void onComplete(final ArrayList<VenueObject> venues, Exception e) {
                 if (e == null) {
@@ -88,15 +97,19 @@ public class Venue extends Fragment {
                         @Override
                         public void run() {
                             dialog.dismiss();
+                            final Snackbar bar = Snackbar.make(mView, "Connection failed", Snackbar.LENGTH_INDEFINITE);
+                            bar.setAction("Retry", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    bar.dismiss();
+                                    loadVenues(mView);
+                                }
+                            }).setActionTextColor(getResources().getColor(R.color.coolYellow)).show();
                         }
                     });
                 }
             }
         });
-
-
-        return view;
-
     }
 
 

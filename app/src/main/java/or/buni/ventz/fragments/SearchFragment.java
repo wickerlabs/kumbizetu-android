@@ -35,7 +35,6 @@ public class SearchFragment extends AAH_FabulousFragment {
         RelativeLayout contentLay = contentView.findViewById(R.id.searchView);
         LinearLayout ll_buttons = contentView.findViewById(R.id.buttons_ll);
 
-
         setAnimationDuration(600);
         setPeekHeight(800);
 

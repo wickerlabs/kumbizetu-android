@@ -3,6 +3,8 @@ package or.buni.ventz.networking;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.miguelcatalan.materialsearchview.Suggestion;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,7 +18,9 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import or.buni.ventz.interfaces.GetCallback;
+import or.buni.ventz.AppInit;
+import or.buni.ventz.interfaces.GetSuggestions;
+import or.buni.ventz.interfaces.GetVenueCallback;
 import or.buni.ventz.objects.VenueObject;
 import or.buni.ventz.util.Constants;
 
@@ -35,7 +39,7 @@ public class Backend {
         return ourInstance;
     }
 
-    public void getVenues(final GetCallback callback) {
+    public void getVenues(final GetVenueCallback callback) {
         final ArrayList<VenueObject> venues = new ArrayList<>();
 
         FormBody body = new FormBody.Builder()
@@ -59,7 +63,7 @@ public class Backend {
                 Log.i("[+] GetVenues", "Success");
 
                 String venJSON = response.body().string();
-                Log.i("[+] VenuesJSON", venJSON);
+                //Log.i("[+] VenuesJSON", venJSON);
 
                 try {
                     JSONArray array = new JSONArray(venJSON);
@@ -80,5 +84,54 @@ public class Backend {
         });
 
     }
+
+    public void getSuggestions(String query, final GetSuggestions suggestionsCallback) {
+
+        FormBody body = new FormBody.Builder()
+                .add("action", "SUG-V")
+                .add("query", query)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                suggestionsCallback.onSuggest(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String suggestions = response.body().string();
+                Log.i("[+] Suggestions", suggestions);
+                try {
+                    JSONArray sugArray = new JSONArray(suggestions);
+                    for (int i = 0; i < sugArray.length(); i++) {
+                        JSONObject object = sugArray.getJSONObject(i);
+                        String venueName = object.getString("venueName");
+                        String venueLocation = object.getString("venueLocation");
+                        String venueId = object.getString("venueId");
+
+                        Suggestion suggestion = new Suggestion();
+                        suggestion.setId(venueId);
+                        suggestion.setLocation(venueLocation);
+                        suggestion.setName(venueName);
+
+                        AppInit.addSuggestion(suggestion);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                suggestionsCallback.onSuggest(null);
+            }
+        });
+
+    }
+
+
 
 }
