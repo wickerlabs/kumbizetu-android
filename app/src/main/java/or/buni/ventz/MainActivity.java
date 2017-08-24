@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.FilterListener;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private int tabIcons[] = {
             R.drawable.venues,
             R.drawable.book,
-            R.drawable.ic_payment_black_24dp
+            R.drawable.ic_favorite_black_24dp
     };
 
     @Override
@@ -53,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[2]);
+        //tabLayout.getTabAt(2).setIcon(tabIcons[2]);
 
         initiateSearchView();
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 searchView.setSubmitOnClick(false);
+                Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
                 return false;
             }
 
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        searchView.setSuggestions(AppInit.getSuggestions());
+                                        searchView.updateSuggestions(AppInit.getSuggestions());
                                     }
                                 });
                             } else {

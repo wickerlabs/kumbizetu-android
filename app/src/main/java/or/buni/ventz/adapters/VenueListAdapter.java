@@ -66,7 +66,7 @@ public class VenueListAdapter extends RecyclerView.Adapter<VenueListAdapter.View
             options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC);
             options.skipMemoryCache(true);
             options.centerCrop();
-            options.sizeMultiplier(0.7f);
+            options.sizeMultiplier(0.8f);
 
             Glide.with(context)
                     .load(venue.getPreviewImage())

@@ -1,18 +1,20 @@
 package com.miguelcatalan.materialsearchview;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -20,36 +22,37 @@ import java.util.List;
  *
  * @author Miguel Catalan Bañuls
  */
-public class SearchAdapter extends BaseAdapter implements Filterable {
+public class SearchAdapter extends ArrayAdapter<Suggestion> implements Filterable {
 
     private ArrayList<Suggestion> data;
     private ArrayList<Suggestion> suggestions;
-    private Drawable suggestionIcon;
     private LayoutInflater inflater;
     private boolean ellipsize;
-    private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<String> locations = new ArrayList<>();
+    private int layoutId;
 
-    public SearchAdapter(Context context, ArrayList<Suggestion> suggestions) {
+
+    public SearchAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull ArrayList<Suggestion> objects, boolean ellipsize) {
+        super(context, resource, objects);
         inflater = LayoutInflater.from(context);
         data = new ArrayList<>();
-        this.suggestions = suggestions;
-    }
-
-    public SearchAdapter(Context context, ArrayList<Suggestion> suggestions, Drawable suggestionIcon, boolean ellipsize) {
-        inflater = LayoutInflater.from(context);
-        data = new ArrayList<>();
-        this.suggestions = suggestions;
-        this.suggestionIcon = suggestionIcon;
+        this.suggestions = objects;
         this.ellipsize = ellipsize;
+        this.layoutId = resource;
+
     }
 
-    public void addItems(String name, String location) {
-        names.add(name);
-        locations.add(location);
+    public void addSuggestions(ArrayList<Suggestion> list) {
+        this.suggestions = list;
+        //notifyDataSetChanged();
     }
 
+    @Override
+    public void addAll(@NonNull Collection<? extends Suggestion> collection) {
+        super.addAll(collection);
+        notifyDataSetChanged();
+    }
 
+    @NonNull
     @Override
     public Filter getFilter() {
         Filter filter = new Filter() {
@@ -62,7 +65,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
                     List<Suggestion> searchData = new ArrayList<>();
 
                     for (Suggestion suggestion : suggestions) {
-                        addItems(suggestion.getName(), suggestion.getLocation());
 
                         boolean name = suggestion.getName().toLowerCase().contains(constraint.toString().toLowerCase());
                         boolean location = suggestion.getLocation().toLowerCase().contains(constraint.toString().toLowerCase());
@@ -105,13 +107,14 @@ public class SearchAdapter extends BaseAdapter implements Filterable {
         return position;
     }
 
+    @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         SuggestionsViewHolder viewHolder;
 
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.suggest_item, parent, false);
+            convertView = inflater.inflate(layoutId, parent, false);
             viewHolder = new SuggestionsViewHolder(convertView);
             convertView.setTag(viewHolder);
         } else {

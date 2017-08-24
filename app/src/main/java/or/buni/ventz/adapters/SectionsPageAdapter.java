@@ -4,9 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import or.buni.ventz.fragments.Bookings;
+import or.buni.ventz.fragments.BrowseFragment;
 import or.buni.ventz.fragments.Payments;
-import or.buni.ventz.fragments.Venue;
 
 /**
  * Created by yusuphwickama on 8/10/17.
@@ -24,10 +23,8 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return Venue.getInstance();
+                return BrowseFragment.getInstance();
             case 1:
-                return Bookings.getInstance();
-            case 2:
                 return Payments.getInstance();
         }
 
@@ -37,7 +34,7 @@ public class SectionsPageAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 3 total pages.
-        return 3;
+        return 2;
     }
 
     @Override

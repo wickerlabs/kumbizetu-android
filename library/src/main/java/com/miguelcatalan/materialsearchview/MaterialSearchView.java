@@ -28,7 +28,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
@@ -47,12 +46,11 @@ import java.util.List;
  */
 public class MaterialSearchView extends FrameLayout implements Filter.FilterListener {
     public static final int REQUEST_VOICE = 9999;
-
+    ArrayList<Suggestion> suggestions;
     private MenuItem mMenuItem;
     private boolean mIsSearchOpen = false;
     private int mAnimationDuration;
     private boolean mClearingFocus;
-
     //Views
     private View mSearchLayout;
     private View mTintView;
@@ -62,29 +60,20 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     private ImageButton mVoiceBtn;
     private ImageButton mEmptyBtn;
     private ConstraintLayout mSearchTopBar;
-
     private CharSequence mOldQueryText;
     private CharSequence mUserQuery;
-
     private OnQueryTextListener mOnQueryChangeListener;
     private SearchViewListener mSearchViewListener;
-
     private ListAdapter mAdapter;
-
     private SavedState mSavedState;
     private boolean submit = false;
-
     private boolean ellipsize = false;
-
     private boolean allowVoiceSearch;
     private Drawable suggestionIcon;
-
     private AlertDialog alertDialog;
-
     private Activity activity;
-
     private Context mContext;
-
+    private String previousQuery;
     private FilterListener listener;
     private final OnClickListener mOnClickListener = new OnClickListener() {
 
@@ -122,6 +111,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         initiateView();
 
         initStyle(attrs, defStyleAttr);
+
+        this.suggestions = new ArrayList<>();
+
     }
 
     public FilterListener getListener() {
@@ -232,6 +224,33 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
         }
     }
 
+    public boolean isPrevious(String query) {
+        return previousQuery.toLowerCase().contains(query.toLowerCase().substring(0, previousQuery.length()));
+    }
+
+    public void updateSuggestions(ArrayList<Suggestion> newSuggestions) {
+
+        searchAdapter = new SearchAdapter(mContext, R.layout.suggest_item, newSuggestions, ellipsize);
+
+        setAdapter(searchAdapter);
+
+        if (newSuggestions.size() > 0) {
+            mTintView.setVisibility(VISIBLE);
+
+            setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    setSubmitOnClick(true);
+                    setQuery(searchAdapter.getItem(position).getName(), submit);
+                }
+            });
+            Log.d(getClass().getSimpleName(), "[+] Tint View -> VISIBLE");
+        } else {
+            Log.d(getClass().getSimpleName(), "[+] Tint View -> GONE");
+            mTintView.setVisibility(GONE);
+        }
+    }
+
     private void initSearchView() {
         mSearchSrcTextView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -256,7 +275,6 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
 
@@ -272,8 +290,8 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     }
 
     private void startFilter(CharSequence s) {
-        if (mAdapter != null && mAdapter instanceof Filterable) {
-            ((Filterable) mAdapter).getFilter().filter(s.toString().trim(), MaterialSearchView.this);
+        if (mAdapter != null) {
+            searchAdapter.getFilter().filter(s.toString().trim(), MaterialSearchView.this);
         }
     }
 
@@ -460,21 +478,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
      * @param suggestions array of suggestions
      */
     public void setSuggestions(ArrayList<Suggestion> suggestions) {
-        if (suggestions != null && suggestions.size() > 0) {
-            mTintView.setVisibility(VISIBLE);
-            searchAdapter = new SearchAdapter(mContext, suggestions, suggestionIcon, ellipsize);
-            setAdapter(searchAdapter);
 
-            setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    setSubmitOnClick(true);
-                    setQuery(searchAdapter.getItem(position).getName(), submit);
-                }
-            });
-        } else {
-            mTintView.setVisibility(GONE);
-        }
     }
 
     /**

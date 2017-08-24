@@ -12,17 +12,16 @@ import java.util.ArrayList;
 
 public class AppInit extends Application {
 
-    private static ArrayList<Suggestion> suggestions = new ArrayList<>(5);
-    private static ArrayList<String> suggestionMap = new ArrayList<>();
+    private static ArrayList<Suggestion> suggestions = new ArrayList<>(15);
+    private static ArrayList<String> suggestionMap = new ArrayList<>(15);
 
-    public static void addSuggestion(Suggestion suggestion) {
+    public static void addSuggestion(ArrayList<Suggestion> nSuggestions) {
+        suggestions.clear();
+        if (nSuggestions.size() == suggestions.size()) {
 
-        if (!suggestionMap.contains(suggestion.getId())) {
-            if (suggestions.size() == 5) {
-                suggestions.remove(suggestions.size() - 1);
-            }
-            suggestions.add(0, suggestion);
-            suggestionMap.add(suggestion.getId());
+            suggestions.addAll(nSuggestions);
+        } else {
+            suggestions.addAll(0, nSuggestions);
         }
     }
 

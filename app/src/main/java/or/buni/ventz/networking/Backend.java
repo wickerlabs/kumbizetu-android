@@ -19,8 +19,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import or.buni.ventz.AppInit;
+import or.buni.ventz.interfaces.GetEventCallback;
 import or.buni.ventz.interfaces.GetSuggestions;
 import or.buni.ventz.interfaces.GetVenueCallback;
+import or.buni.ventz.objects.EventType;
 import or.buni.ventz.objects.VenueObject;
 import or.buni.ventz.util.Constants;
 
@@ -85,6 +87,58 @@ public class Backend {
 
     }
 
+    public void getEvents(final GetEventCallback callback) {
+        final ArrayList<EventType> events = new ArrayList<>();
+        final ArrayList<EventType> copEvents = new ArrayList<>();
+
+        FormBody body = new FormBody.Builder()
+                .add("action", "ALL-E")
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, IOException e) {
+                Log.e("[+] GetVenues", "Failed");
+                callback.onComplete(null, null, e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, Response response) throws IOException {
+                Log.i("[+] GetVenues", "Success");
+
+                String venJSON = response.body().string();
+                Log.i("[+] Events", venJSON);
+
+                try {
+                    JSONArray array = new JSONArray(venJSON);
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject json = array.getJSONObject(i);
+                        EventType event = EventType.parse(json.toString());
+
+                        if (event.getType().equalsIgnoreCase("cooperate")) {
+                            copEvents.add(event);
+                        } else if (event.getType().equalsIgnoreCase("private")) {
+                            events.add(event);
+                        }
+
+                    }
+
+                    callback.onComplete(events, copEvents, null);
+
+                } catch (JSONException e) {
+                    callback.onComplete(null, null, e);
+                }
+
+            }
+        });
+
+    }
+
     public void getSuggestions(String query, final GetSuggestions suggestionsCallback) {
 
         FormBody body = new FormBody.Builder()
@@ -106,9 +160,10 @@ public class Backend {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String suggestions = response.body().string();
-                Log.i("[+] Suggestions", suggestions);
+                //Log.i("[+] Suggestions", suggestions);
                 try {
                     JSONArray sugArray = new JSONArray(suggestions);
+                    ArrayList<Suggestion> tempList = new ArrayList<>();
                     for (int i = 0; i < sugArray.length(); i++) {
                         JSONObject object = sugArray.getJSONObject(i);
                         String venueName = object.getString("venueName");
@@ -120,8 +175,11 @@ public class Backend {
                         suggestion.setLocation(venueLocation);
                         suggestion.setName(venueName);
 
-                        AppInit.addSuggestion(suggestion);
+                        tempList.add(suggestion);
                     }
+
+                    AppInit.addSuggestion(tempList);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
