@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="or.buni.ventz.MainActivity">
+    tools:context="or.buni.ventz.or.buni.bukit.MainActivity">
     <item
         android:id="@+id/action_search"
         android:actionViewClass="android.widget.SearchView"

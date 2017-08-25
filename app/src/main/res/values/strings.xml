@@ -15,4 +15,5 @@
         services and help resolve their complaints.
     </string>
     <string name="title_activity_calendar">CalendarActivity</string>
+    <string name="title_activity_events">EventsActivity</string>
 </resources>

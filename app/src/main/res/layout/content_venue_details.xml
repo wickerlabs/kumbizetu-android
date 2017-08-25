@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="or.buni.ventz.VenueDetailsActivity"
+    tools:context="or.buni.ventz.or.buni.bukit.VenueDetailsActivity"
     tools:showIn="@layout/activity_venue_details">
 
     <android.support.design.widget.TabLayout

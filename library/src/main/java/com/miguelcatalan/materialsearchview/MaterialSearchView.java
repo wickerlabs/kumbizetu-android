@@ -92,6 +92,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
             }
         }
     };
+    private String name;
     private ProgressBar progressBar;
     private SearchAdapter searchAdapter;
 
@@ -241,12 +242,12 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     setSubmitOnClick(true);
-                    setQuery(searchAdapter.getItem(position).getName(), submit);
+                    setQuery(searchAdapter.getItem(position).getName(), searchAdapter.getItem(position).getId(), submit);
                 }
             });
-            Log.d(getClass().getSimpleName(), "[+] Tint View -> VISIBLE");
+            //Log.d(getClass().getSimpleName(), "[+] Tint View -> VISIBLE");
         } else {
-            Log.d(getClass().getSimpleName(), "[+] Tint View -> GONE");
+            //Log.d(getClass().getSimpleName(), "[+] Tint View -> GONE");
             mTintView.setVisibility(GONE);
         }
     }
@@ -324,11 +325,11 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
     }
 
     private void onSubmitQuery() {
-        CharSequence query = mSearchSrcTextView.getText();
+        CharSequence query = mUserQuery;
         if (query != null && TextUtils.getTrimmedLength(query) > 0) {
             if (mOnQueryChangeListener == null || !mOnQueryChangeListener.onQueryTextSubmit(query.toString())) {
-                closeSearch();
-                mSearchSrcTextView.setText(null);
+                //closeSearch();
+                //mSearchSrcTextView.setText(null);
             }
         }
     }
@@ -497,8 +498,9 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
      * @param query
      * @param submit
      */
-    public void setQuery(CharSequence query, boolean submit) {
-        mSearchSrcTextView.setText(query);
+    public void setQuery(String name, CharSequence query, boolean submit) {
+        this.name = name;
+        mSearchSrcTextView.setText(name);
         if (query != null) {
             mSearchSrcTextView.setSelection(mSearchSrcTextView.length());
             mUserQuery = query;
@@ -698,6 +700,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
         mSavedState = new SavedState(superState);
         mSavedState.query = mUserQuery != null ? mUserQuery.toString() : null;
+        mSavedState.name = name;
         mSavedState.isSearchOpen = this.mIsSearchOpen;
 
         return mSavedState;
@@ -714,7 +717,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
 
         if (mSavedState.isSearchOpen) {
             showSearch(false);
-            setQuery(mSavedState.query, false);
+            setQuery(mSavedState.name, mSavedState.query, false);
         }
 
         super.onRestoreInstanceState(mSavedState.getSuperState());
@@ -764,6 +767,7 @@ public class MaterialSearchView extends FrameLayout implements Filter.FilterList
                     }
                 };
         String query;
+        String name;
         boolean isSearchOpen;
 
         SavedState(Parcelable superState) {

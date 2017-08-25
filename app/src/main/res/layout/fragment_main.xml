@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="or.buni.ventz.MainActivity">
+    tools:context="or.buni.ventz.or.buni.bukit.MainActivity">
 
     <TextView
         android:id="@+id/section_label"

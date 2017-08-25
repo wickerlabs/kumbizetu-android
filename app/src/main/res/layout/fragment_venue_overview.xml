@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="0dp"
-    tools:context="or.buni.ventz.fragments.VenueOverview">
+    tools:context="or.buni.bukit.fragments.VenueOverview">
 
     <!-- TODO: Update blank fragment layout -->
 
