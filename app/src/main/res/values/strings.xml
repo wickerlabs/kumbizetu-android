@@ -16,4 +16,5 @@
     </string>
     <string name="title_activity_calendar">CalendarActivity</string>
     <string name="title_activity_events">EventsActivity</string>
+    <string name="title_activity_venue_overview">Venue Overview</string>
 </resources>

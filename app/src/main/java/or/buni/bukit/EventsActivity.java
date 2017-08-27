@@ -93,7 +93,7 @@ public class EventsActivity extends BaseActivity {
                         });
                         if (e == null) {
                             Log.d(getClass().getSimpleName(), "[+] Found -> " + String.valueOf(venues.size() + " in " + name + " with Id " + id));
-                            Intent intent = new Intent(EventsActivity.this, VenueDetailsActivity.class);
+                            Intent intent = new Intent(EventsActivity.this, VenueActivity.class);
                             intent.putExtra("json", venues.get(0).getVenueJSON());
 
                             startActivity(intent);

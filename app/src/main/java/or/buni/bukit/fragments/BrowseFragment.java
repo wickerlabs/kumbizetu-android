@@ -1,7 +1,6 @@
 package or.buni.bukit.fragments;
 
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -10,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 
 import java.util.ArrayList;
 
@@ -29,9 +30,10 @@ import or.buni.ventz.R;
 public class BrowseFragment extends Fragment {
 
     private static BrowseFragment instance;
+    ProgressBar browseBar;
+    ScrollView mainContent;
     private BrowseAdapter adapter;
     private BrowseAdapter adapter2;
-    private ProgressDialog dialog;
 
 
     public BrowseFragment() {
@@ -56,6 +58,9 @@ public class BrowseFragment extends Fragment {
 
         RecyclerView privateRecycler = view.findViewById(R.id.privateRecycler);
         RecyclerView cooperateRecycler = view.findViewById(R.id.cooperateRecycler);
+        browseBar = view.findViewById(R.id.browseBar);
+        mainContent = view.findViewById(R.id.frameContent);
+
         final ExtendedViewPager vpViewPager = (ExtendedViewPager) container;
 
 
@@ -96,11 +101,7 @@ public class BrowseFragment extends Fragment {
     }
 
     private void loadEvents(final View mView) {
-        dialog = new ProgressDialog(getContext());
-        dialog.setMessage("Loading, please wait...");
-        dialog.setCanceledOnTouchOutside(false);
-        //dialog.show();
-
+        browseBar.setVisibility(View.VISIBLE);
         Backend.getInstance().getEvents(new GetEventCallback() {
             @Override
             public void onComplete(final ArrayList<EventType> events, final ArrayList<EventType> copEvents, Exception e) {
@@ -109,9 +110,12 @@ public class BrowseFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
                             adapter.addEvents(events);
                             adapter2.addEvents(copEvents);
-                            dialog.dismiss();
+                            browseBar.setVisibility(View.GONE);
+                            mainContent.setVisibility(View.VISIBLE);
+
                         }
                     });
                 } else {
@@ -119,7 +123,7 @@ public class BrowseFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            dialog.dismiss();
+                            browseBar.setVisibility(View.GONE);
                             final Snackbar bar = Snackbar.make(mView, "Connection failed", Snackbar.LENGTH_INDEFINITE);
                             bar.setAction("Retry", new View.OnClickListener() {
                                 @Override

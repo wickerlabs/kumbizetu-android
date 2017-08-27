@@ -7,9 +7,21 @@
 
     <!-- TODO: Update blank fragment layout -->
 
+    <ProgressBar
+        android:id="@+id/browseBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_gravity="top|center"
+        android:layout_marginTop="50dp"
+        android:indeterminate="true" />
+
     <ScrollView
+        android:id="@+id/frameContent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:nestedScrollingEnabled="true"
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"

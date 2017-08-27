@@ -51,6 +51,8 @@ public class MainActivity extends BaseActivity {
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setLogo(R.drawable.ic_logo_second);
 
         mSectionsPagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
@@ -117,7 +119,7 @@ public class MainActivity extends BaseActivity {
 
                         if (e == null) {
                             Log.d(getClass().getSimpleName(), "[+] Found -> " + String.valueOf(venues.size() + " in " + name + " with Id " + id));
-                            Intent intent = new Intent(MainActivity.this, VenueDetailsActivity.class);
+                            Intent intent = new Intent(MainActivity.this, VenueActivity.class);
                             intent.putExtra("json", venues.get(0).getVenueJSON());
 
                             startActivity(intent);

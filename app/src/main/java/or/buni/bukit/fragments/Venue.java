@@ -1,6 +1,7 @@
 package or.buni.bukit.fragments;
 
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-import or.buni.bukit.VenueDetailsActivity;
+import or.buni.bukit.VenueActivity;
 import or.buni.bukit.adapters.VenueListAdapter;
 import or.buni.bukit.interfaces.GetVenueCallback;
 import or.buni.bukit.interfaces.ItemClickListener;
@@ -29,6 +31,8 @@ import or.buni.ventz.R;
 public class Venue extends Fragment {
 
     private static Venue instance;
+    ProgressBar venueBar;
+    RecyclerView recyclerView;
     private VenueListAdapter adapter;
     private ProgressDialog dialog;
 
@@ -51,14 +55,17 @@ public class Venue extends Fragment {
         View view = inflater.inflate(R.layout.fragment_venue, container, false);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        RecyclerView recyclerView = view.findViewById(R.id.venueList);
+        recyclerView = view.findViewById(R.id.venueList);
         recyclerView.setLayoutManager(mLayoutManager);
+
+        venueBar = view.findViewById(R.id.venueBar);
+
 
         adapter = new VenueListAdapter(getContext(), new ItemClickListener() {
             @Override
             public void onClick(Object object) {
                 VenueObject venue = (VenueObject) object;
-                Intent intent = new Intent(getContext(), VenueDetailsActivity.class);
+                Intent intent = new Intent(getContext(), VenueActivity.class);
                 intent.putExtra("json", venue.getVenueJSON());
 
                 getActivity().startActivity(intent);
@@ -75,10 +82,7 @@ public class Venue extends Fragment {
     }
 
     private void loadVenues(final View mView) {
-        dialog = new ProgressDialog(getContext());
-        dialog.setMessage("Loading, please wait...");
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+        venueBar.setVisibility(View.VISIBLE);
 
         Intent intent = getActivity().getIntent();
         final String id = intent.getStringExtra("typeId");
@@ -91,30 +95,37 @@ public class Venue extends Fragment {
 
                     Log.d(getClass().getSimpleName(), "[+] Found -> " + String.valueOf(venues.size() + " in " + name + " with Id " + id));
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.addVenues(venues);
-                            dialog.dismiss();
-                        }
-                    });
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.addVenues(venues);
+                                venueBar.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                            }
+                        });
+                    }
 
                 } else {
                     e.printStackTrace();
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            dialog.dismiss();
-                            final Snackbar bar = Snackbar.make(mView, "Connection failed", Snackbar.LENGTH_INDEFINITE);
-                            bar.setAction("Retry", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    bar.dismiss();
-                                    loadVenues(mView);
-                                }
-                            }).setActionTextColor(getResources().getColor(R.color.coolYellow)).show();
-                        }
-                    });
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                venueBar.setVisibility(View.GONE);
+                                final Snackbar bar = Snackbar.make(mView, "Connection failed", Snackbar.LENGTH_INDEFINITE);
+                                bar.setAction("Retry", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        bar.dismiss();
+                                        loadVenues(mView);
+                                    }
+                                }).setActionTextColor(getResources().getColor(R.color.coolYellow)).show();
+                            }
+                        });
+                    }
                 }
             }
         });

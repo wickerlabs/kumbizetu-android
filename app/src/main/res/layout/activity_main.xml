@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="or.buni.ventz.or.buni.bukit.MainActivity">
+    tools:context="or.buni.bukit.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
