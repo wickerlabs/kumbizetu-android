@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="or.buni.ventz.MainActivity">
+    tools:context="or.buni.bukit.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -30,22 +30,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
+    <or.buni.bukit.util.ExtendedViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:tint="#fff"
-        app:srcCompat="@drawable/ic_search_black_24dp" />
+        android:elevation="6dp" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="or.buni.bukit.AppInit"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,8 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="or.buni.bukit.MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,13 +24,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VenueDetailsActivity"
+            android:name="or.buni.bukit.VenueDetailsActivity"
             android:label="@string/title_activity_venue_details"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="or.buni.bukit.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="or.buni.ventz.MainActivity" />
+                android:value="or.buni.bukit.EventsActivity" />
+        </activity>
+        <activity
+            android:name="or.buni.bukit.EventsActivity"
+            android:label="@string/title_activity_events"
+            android:parentActivityName="or.buni.bukit.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="or.buni.bukit.MainActivity" />
+        </activity>
+        <activity
+            android:name="or.buni.bukit.VenueActivity"
+            android:label=""
+            android:parentActivityName="or.buni.bukit.EventsActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="or.buni.bukit.EventsActivity" />
         </activity>
     </application>
 
