@@ -2,8 +2,8 @@ package or.buni.bukit;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +31,7 @@ public class VenueActivity extends BaseActivity {
     private VenueObject venue;
     private TextView name, place, description;
     private ArrayList<Date> venueDates;
-
+    private GridLayout imageGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +52,7 @@ public class VenueActivity extends BaseActivity {
 
         name = (TextView) findViewById(R.id.venueName);
         place = (TextView) findViewById(R.id.location);
+        imageGrid = (GridLayout) findViewById(R.id.imageGrid);
 
         name.setText(venue.getName());
 
@@ -69,8 +70,8 @@ public class VenueActivity extends BaseActivity {
 
         Glide.with(this).load(venue.getPreviewImage()).into(imageView);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        ImageButton fav = (ImageButton) findViewById(R.id.favBtn);
+        fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(VenueActivity.this, "Added to favorites", Toast.LENGTH_SHORT).show();
@@ -79,7 +80,7 @@ public class VenueActivity extends BaseActivity {
 
     }
 
-    private void launchDateDialog(View view) {
+    public void launchDateDialog(View view) {
         View dateView = View.inflate(VenueActivity.this, R.layout.date_picker, null);
 
         final Calendar nextYear = Calendar.getInstance();
