@@ -19,6 +19,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import or.buni.bukit.AppInit;
+import or.buni.bukit.interfaces.BookingListener;
 import or.buni.bukit.interfaces.GetEventCallback;
 import or.buni.bukit.interfaces.GetSuggestions;
 import or.buni.bukit.interfaces.GetVenueCallback;
@@ -79,7 +80,7 @@ public class Backend {
                 Log.i("[+] GetVenues", "Success");
 
                 String venJSON = response.body().string();
-                //Log.i("[+] VenuesJSON", venJSON);
+                Log.i("[+] VenuesJSON", venJSON);
 
                 try {
                     JSONArray array = new JSONArray(venJSON);
@@ -163,6 +164,40 @@ public class Backend {
         this.getSuggestions("", query, "SUG-V", callback);
     }
 
+    public void addBooking(String venueId, String date, final BookingListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("action", "ADD-BK")
+                .add("bookingDate", date)
+                .add("vid", venueId)
+                .add("uid", Constants.DEFAULT_UID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.onComplete(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                Log.d("BookingBody", body);
+                try {
+                    JSONObject json = new JSONObject(body);
+
+                    listener.onComplete(json.getString("bookingId"), null);
+                } catch (JSONException e) {
+                    listener.onComplete(null, e);
+                }
+            }
+        });
+    }
+
     private void getSuggestions(String eventId, String query, String action, final GetSuggestions suggestionsCallback) {
 
         FormBody body = new FormBody.Builder()
@@ -214,7 +249,6 @@ public class Backend {
         });
 
     }
-
 
 
 }

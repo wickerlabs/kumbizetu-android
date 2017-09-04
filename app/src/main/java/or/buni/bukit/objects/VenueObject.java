@@ -79,6 +79,16 @@ public class VenueObject {
         return venue;
     }
 
+    public float getFinalPrice() {
+        float venPrice = Float.parseFloat(this.getPriceFrom());
+        float initialPay = 0.15f * venPrice;
+        float serviceCharge = 0.005f * venPrice;
+
+        float totalPrice = initialPay + serviceCharge;
+
+        return totalPrice;
+    }
+
     public String getVenueJSON() {
         return venueJSON;
     }
