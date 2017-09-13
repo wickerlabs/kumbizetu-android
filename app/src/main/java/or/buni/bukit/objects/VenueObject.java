@@ -51,7 +51,7 @@ public class VenueObject {
         //venue.addImage("https://source.unsplash.com/collection/208285/");
 
         JSONArray imagesArray = venueObject.getJSONArray("images");
-        JSONArray bookingsArray = venueObject.getJSONArray("bookings");
+
         //Log.i("[+] Venue->".concat(venID).concat("->found"), String.valueOf(imagesArray.length()));
 
         for (int j = 0; j < imagesArray.length(); j++) {
@@ -62,6 +62,7 @@ public class VenueObject {
             venue.addImage(imageURL);
         }
 
+        JSONArray bookingsArray = venueObject.getJSONArray("bookings");
         for (int j = 0; j < bookingsArray.length(); j++) {
             JSONObject dateObject = bookingsArray.getJSONObject(j);
             String date = dateObject.getString("date");
@@ -77,16 +78,6 @@ public class VenueObject {
         venue.setVenueJSON(venueObject.toString());
 
         return venue;
-    }
-
-    public float getFinalPrice() {
-        float venPrice = Float.parseFloat(this.getPriceFrom());
-        float initialPay = 0.15f * venPrice;
-        float serviceCharge = 0.005f * venPrice;
-
-        float totalPrice = initialPay + serviceCharge;
-
-        return totalPrice;
     }
 
     public String getVenueJSON() {
@@ -152,9 +143,12 @@ public class VenueObject {
     public String getPrettyPrice() {
         DecimalFormat format = new DecimalFormat("#,###");
 
-        Float price = Float.parseFloat(this.getPriceFrom());
+        int price = Math.round(Float.parseFloat(this.getPriceFrom()));
+        Double amount = Math.ceil(price / 100);
 
-        return format.format(price);
+        amount = amount * 100;
+
+        return format.format(amount);
     }
 
     public String getLocationDesc() {
