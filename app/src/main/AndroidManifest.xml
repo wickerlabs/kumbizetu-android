@@ -52,6 +52,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="or.buni.bukit.EventsActivity" />
         </activity>
+        <activity
+            android:name="or.buni.bukit.PaymentActivity"
+            android:label="Booking payment"
+            android:parentActivityName="or.buni.bukit.VenueActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="or.buni.bukit.VenueActivity" />
+        </activity>
     </application>
 
 </manifest>

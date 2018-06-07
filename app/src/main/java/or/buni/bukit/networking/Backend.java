@@ -10,7 +10,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -19,9 +23,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import or.buni.bukit.AppInit;
+import or.buni.bukit.interfaces.BookingListener;
+import or.buni.bukit.interfaces.GetDateListener;
 import or.buni.bukit.interfaces.GetEventCallback;
 import or.buni.bukit.interfaces.GetSuggestions;
 import or.buni.bukit.interfaces.GetVenueCallback;
+import or.buni.bukit.interfaces.PaymentListener;
 import or.buni.bukit.objects.EventType;
 import or.buni.bukit.objects.VenueObject;
 import or.buni.bukit.util.Constants;
@@ -79,7 +86,7 @@ public class Backend {
                 Log.i("[+] GetVenues", "Success");
 
                 String venJSON = response.body().string();
-                //Log.i("[+] VenuesJSON", venJSON);
+                Log.i("[+] VenuesJSON", venJSON);
 
                 try {
                     JSONArray array = new JSONArray(venJSON);
@@ -163,6 +170,148 @@ public class Backend {
         this.getSuggestions("", query, "SUG-V", callback);
     }
 
+    public void addBooking(String venueId, String date, final BookingListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("action", "ADD-BK")
+                .add("bookingDate", date)
+                .add("vid", venueId)
+                .add("uid", Constants.DEFAULT_UID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.onComplete(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                Log.d("BookingBody", body);
+                try {
+                    JSONObject json = new JSONObject(body);
+
+                    listener.onComplete(json.getString("bookingId"), null);
+                } catch (JSONException e) {
+                    listener.onComplete(null, e);
+                }
+            }
+        });
+    }
+
+    public void checkAvailability(String venueId, String date, final BookingListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("action", "CHK-BK")
+                .add("bookingDate", date)
+                .add("vid", venueId)
+                .add("uid", Constants.DEFAULT_UID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.onComplete(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                Log.d("BookingBody", body);
+                try {
+                    if (!body.equals(Constants.NOT_OKAY)) {
+                        JSONObject json = new JSONObject(body);
+                        listener.onComplete(json.getString("bookingId"), null);
+
+                    } else {
+                        listener.onComplete(body, null);
+                    }
+
+                } catch (JSONException e) {
+                    listener.onComplete(null, e);
+                }
+            }
+        });
+    }
+
+    public void getVenueDates(final String vid, final GetDateListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("action", "V-D")
+                .add("vid", vid)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.onGetDatesComplete(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+                ArrayList<Date> dates = new ArrayList<>();
+                try {
+                    JSONArray bookingsArray = new JSONArray(body);
+                    for (int j = 0; j < bookingsArray.length(); j++) {
+                        JSONObject dateObject = bookingsArray.getJSONObject(j);
+                        String date = dateObject.getString("date");
+                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+
+                        dates.add(format.parse(date));
+                    }
+
+                    listener.onGetDatesComplete(dates, null);
+                } catch (Exception e) {
+                    listener.onGetDatesComplete(null, e);
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+    }
+
+
+    public void checkPayment(final String refID, final PaymentListener listener) {
+        FormBody body = new FormBody.Builder()
+                .add("action", "P-ID")
+                .add("checkRefId", refID)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(Constants.URL)
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                listener.onCheckComplete(null, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String body = response.body().string();
+
+                listener.onCheckComplete(body, null);
+            }
+        });
+    }
+
     private void getSuggestions(String eventId, String query, String action, final GetSuggestions suggestionsCallback) {
 
         FormBody body = new FormBody.Builder()
@@ -214,7 +363,6 @@ public class Backend {
         });
 
     }
-
 
 
 }

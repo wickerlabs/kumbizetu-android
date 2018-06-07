@@ -120,7 +120,9 @@ public class MainActivity extends BaseActivity {
                         if (e == null) {
                             Log.d(getClass().getSimpleName(), "[+] Found -> " + String.valueOf(venues.size() + " in " + name + " with Id " + id));
                             Intent intent = new Intent(MainActivity.this, VenueActivity.class);
-                            intent.putExtra("json", venues.get(0).getVenueJSON());
+                            if (!venues.isEmpty()) {
+                                intent.putExtra("json", venues.get(0).getVenueJSON());
+                            }
 
                             startActivity(intent);
                         } else {
